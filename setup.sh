@@ -1,14 +1,13 @@
 #!/bin/bash
-
 # This is a script you can run on Raspbian to set up mitmproxy on a Raspberry Pi.  This uses the wireless interface to set up an access point.  The wired interface is used to connect to the upstream network.
-# Tested on Raspbian release 2018-11-13 with a Raspberry Pi 3 Model B V1.2
+# Tested on Raspbian release 2019-09-26 with a Raspberry Pi 3 Model B V1.2
+
+# Ensure we exit on error
+set -e
 
 # Install dnsmasq, hostapd for IP assignment and an access point
 sudo apt-get update
-sudo apt-get install -y dnsmasq hostapd
-
-# Build dependencies for python 3.7
-sudo apt-get install -y build-essential tk-dev libncurses5-dev libncursesw5-dev libreadline6-dev libdb5.3-dev libgdbm-dev libsqlite3-dev libssl-dev libbz2-dev libffi-dev
+sudo apt-get install -y dnsmasq hostapd python3-pip
 
 # Remove wpasupplicant so it doesn't interfere with our hostapd
 sudo apt-get remove --purge -y wpasupplicant
@@ -37,17 +36,8 @@ sudo iptables -A FORWARD -i wlan0 -o eth0 -j ACCEPT
 sudo sh -c 'iptables-save > /etc/iptables.ipv4.nat'
 sudo bash -c 'echo "iptables-restore < /etc/iptables.ipv4.nat" > /lib/dhcpcd/dhcpcd-hooks/70-ipv4-nat'
 
-# Download, build, and install python 3.7.3
-wget https://www.python.org/ftp/python/3.7.3/Python-3.7.3.tgz
-tar -zxvf Python-3.7.3.tgz
-cd Python-3.7.3
-./configure
-make
-sudo make install
-cd ..
-
 # Install the latest mitmproxy and download a script which forwards http & https requests through it
-sudo pip3.7 install mitmproxy
+sudo pip3 install mitmproxy
 wget https://raw.githubusercontent.com/Hainish/RaspberryPi-Packet-Sniffer/master/mitm.sh
 chmod +x mitm.sh
 
