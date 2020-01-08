@@ -17,7 +17,7 @@ sudo bash -c "echo 'interface wlan0' >> /etc/dhcpcd.conf"
 sudo bash -c "echo 'static ip_address=172.24.1.1/24' >> /etc/dhcpcd.conf"
 
 # Download the hostapd config, enable the service
-sudo wget -O /etc/hostapd/hostapd.conf https://raw.githubusercontent.com/loomanss/RaspberryPi-Packet-Sniffer/master//hostapd.conf
+sudo wget -O /etc/hostapd/hostapd.conf https://raw.githubusercontent.com/loomanss/RaspberryPi-Packet-Sniffer/master/hostapd.conf
 sudo bash -c "echo 'DAEMON_CONF="/etc/hostapd/hostapd.conf"' > /etc/default/hostapd"
 sudo systemctl unmask hostapd.service
 sudo systemctl enable hostapd
